@@ -19,11 +19,12 @@ services:
     build: .
     ports:
       - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
+      - ./src:/app/src
       - resume_uploads:/app/uploads
-    environment:
-      - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://kenexai_user:kenexai_password@db:5432/kenexai_talent_db
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy

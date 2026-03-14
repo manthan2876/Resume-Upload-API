@@ -1,11 +1,12 @@
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://kenexai_user:kenexai_password@localhost:5432/kenexai_talent_db")
+# Database configuration for Kenexai
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://kenexai_user:kenexai_password@db:5432/kenexai_talent_db")
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
