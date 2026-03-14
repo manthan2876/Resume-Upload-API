@@ -1,4 +1,20 @@
 services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=kenexai_user
+      - POSTGRES_PASSWORD=kenexai_password
+      - POSTGRES_DB=kenexai_talent_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kenexai_user -d kenexai_talent_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: .
     ports:
@@ -7,7 +23,12 @@ services:
       - resume_uploads:/app/uploads
     environment:
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://kenexai_user:kenexai_password@db:5432/kenexai_talent_db
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
 
 volumes:
   resume_uploads:
+  postgres_data:
